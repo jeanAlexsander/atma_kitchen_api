@@ -6,15 +6,13 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class PromoPointController extends Controller
+class RecipesController extends Controller
 {
     public function create(Request $request)
     {
         $data = $request->all();
-        DB::table('products')->insert([
-            'name' => $data['name'],
-            'unit' => $data['unit'],
-            'amount' => $data['amount'],
+        DB::table('recipes')->insert([
+            'product_id' => $data['product_id'],
         ]);
         if ($data) {
             return response()->json([
@@ -33,7 +31,7 @@ class PromoPointController extends Controller
 
     public function read()
     {
-        $data = DB::table('ingredients')->get();
+        $data = DB::table('recipes')->get();
         if ($data) {
             return response()->json([
                 'status' => 'success',
@@ -51,11 +49,11 @@ class PromoPointController extends Controller
 
     public function update(Request $request, $id)
     {
-        $data = DB::table('ingredients')->where('ingredient_id', $id)->get();
-        $dataUpdate = DB::table('ingredients')->where('ingredient_id', $id)->update([
-            'amount' => $request->amount,
+        $data = DB::table('recipes')->where('product_id', $id)->get();
+        $dataUpdate = DB::table('recipes')->where('product_id', $id)->update([
+            'product_id' => $request->product_id,
         ]);
-        $data = DB::table('ingredients')->where('ingredient_id', $id)->get();
+        $data = DB::table('recipes')->where('product_id', $id)->get();
         if ($dataUpdate) {
             return response()->json([
                 'status' => 'success',
@@ -73,9 +71,9 @@ class PromoPointController extends Controller
 
     public function delete($id)
     {
-        $data = DB::table('ingredients')->where('ingredient_id', $id)->get();
+        $data = DB::table('recipes')->where('product_id', $id)->get();
         if ($data) {
-            DB::table('ingredients')->where('ingredient_id', $id)->delete();
+            DB::table('recipes')->where('product_id', $id)->delete();
             return response()->json([
                 'status' => 'success',
                 'message' => 'Data has been deleted',
@@ -92,7 +90,7 @@ class PromoPointController extends Controller
 
     public function search($id)
     {
-        $data = DB::table('ingredients')->where('ingredient_id', $id)->get();
+        $data = DB::table('recipes')->where('recipe_id', $id)->get();
         if ($data) {
             return response()->json([
                 'status' => 'success',

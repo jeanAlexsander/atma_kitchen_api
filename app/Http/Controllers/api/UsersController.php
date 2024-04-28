@@ -6,16 +6,20 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class RecipeIngredientsController extends Controller
+class UsersController extends Controller
 {
     public function create(Request $request)
     {
         $data = $request->all();
-        DB::table('recipe_ingredients')->insert([
-            'recipe_id' => $data['recipe_id'],
-            'ingredient_id' => $data['ingredient_id'],
-            'total_use' => $data['total_use'],
-            ''
+        DB::table('users')->insert([
+            'first_name' => $data['first_name'],
+            'last_name' => $data['last_name'],
+            'email' => $data['email'],
+            'password_hash' => $data['password_hash'],
+            'date_of_birth' => $data['date_of_birth'],
+            'total_point' => 0,
+            'role_id' => $data['role_id'],
+            'position' => $data['position'],
         ]);
         if ($data) {
             return response()->json([
@@ -34,7 +38,7 @@ class RecipeIngredientsController extends Controller
 
     public function read()
     {
-        $data = DB::table('recipe_ingredients')->get();
+        $data = DB::table('users')->get();
         if ($data) {
             return response()->json([
                 'status' => 'success',
@@ -52,13 +56,12 @@ class RecipeIngredientsController extends Controller
 
     public function update(Request $request, $id)
     {
-        $data = DB::table('recipe_ingredients')->where('recipe_id', $id)->get();
-        $dataUpdate = DB::table('recipe_ingredients')->where('recipe_id', $id)->update([
-            'recipe_id' => $request ->recipe_id,
-            'ingredient_id' => $request ->ingredient_id,
-            'total_use' => $request ->total_use,
+        $data = DB::table('users')->where('user_id', $id)->get();
+        $dataUpdate = DB::table('users')->where('user_id', $id)->update([
+            'position' => $request->position,
+            'total_point' => $request->total_point,
         ]);
-        $data = DB::table('recipe_ingredients')->where('recipe_id', $id)->get();
+        $data = DB::table('users')->where('user_id', $id)->get();
         if ($dataUpdate) {
             return response()->json([
                 'status' => 'success',
@@ -76,9 +79,9 @@ class RecipeIngredientsController extends Controller
 
     public function delete($id)
     {
-        $data = DB::table('recipe_ingredients')->where('recipe_id', $id)->get();
+        $data = DB::table('users')->where('user_id', $id)->get();
         if ($data) {
-            DB::table('recipe_ingredients')->where('recipe_id', $id)->delete();
+            DB::table('users')->where('user_id', $id)->delete();
             return response()->json([
                 'status' => 'success',
                 'message' => 'Data has been deleted',
@@ -95,7 +98,7 @@ class RecipeIngredientsController extends Controller
 
     public function search($id)
     {
-        $data = DB::table('recipe_ingredients')->where('recipe_id', $id)->get();
+        $data = DB::table('users')->where('user_id', $id)->get();
         if ($data) {
             return response()->json([
                 'status' => 'success',
@@ -110,6 +113,4 @@ class RecipeIngredientsController extends Controller
             ]);
         }
     }
-
-
 }

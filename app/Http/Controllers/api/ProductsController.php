@@ -12,34 +12,6 @@ class ProductsController extends Controller
     {
         $data = $request->all();
         DB::table('products')->insert([
-            'product_id' => $data['product_id'],
-            'custodian_id' => $data['custodian_id'],
-            'name' => $data['name'],
-            'price' => $data['price'],
-            'quantity' => $data['quantity'],
-            'image' => $data['image'],
-            'category_id' => $data['category_id'],
-        ]);
-        if ($data) {
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Data has been added',
-                'data' => $data
-            ]);
-        } else {
-            return response()->json([
-                'status' => 'failed',
-                'message' => 'Data cannot be added',
-                'data' => $data
-            ]);
-        }
-    }
-
-    public function createCustodians(Request $request)
-    {
-        $data = $request->all();
-        DB::table('products')->insert([
-            'product_id' => $data['product_id'],
             'custodian_id' => $data['custodian_id'],
             'name' => $data['name'],
             'price' => $data['price'],
@@ -84,6 +56,8 @@ class ProductsController extends Controller
     {
         $data = DB::table('products')->where('product_id', $id)->get();
         $dataUpdate = DB::table('products')->where('product_id', $id)->update([
+            'custodian_id' => $request->custodian_id,
+            'name' => $request->name,
             'price' => $request->price,
             'quantity' => $request->quantity,
             'image' => $request->image,

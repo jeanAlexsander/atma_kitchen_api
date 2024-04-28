@@ -50,4 +50,9 @@ Route::post('/update-custodians/{id}', 'App\Http\Controllers\api\CustodiansContr
 Route::delete('/delete-custodians/{id}', 'App\Http\Controllers\api\CustodiansController@delete');
 Route::post('/search-custodians/{id}', 'App\Http\Controllers\api\CustodiansController@search');
 
-//Promo
+//RecipeIngredients
+Route::post('/add-recipeIngredients', 'App\Http\Controllers\api\RecipeIngredientsController@create');
+Route::get('/get-recipeIngredients', 'App\Http\Controllers\api\RecipeIngredientsController@read');
+Route::post('/update-recipeIngredients/{id}', 'App\Http\Controllers\api\RecipeIngredientsController@update');
+Route::delete('/delete-recipeIngredients/{id}', 'App\Http\Controllers\api\RecipeIngredientsController@delete');
+Route::post('/search-recipeIngredients/{id}', 'App\Http\Controllers\api\RecipeIngredientsController@search');

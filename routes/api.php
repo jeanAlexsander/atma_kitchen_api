@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\api\EmployeesController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,9 +15,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+
 
 Route::post('/login', 'App\Http\Controllers\api\LoginController@login');
 Route::get('/change-password', 'App\Http\Controllers\api\ChangePasswordController@changePassword');
@@ -62,10 +61,9 @@ Route::get('/get-users', 'App\Http\Controllers\api\UsersController@read');
 Route::post('/update-users/{id}', 'App\Http\Controllers\api\UsersController@update');
 Route::delete('/delete-users/{id}', 'App\Http\Controllers\api\UsersController@delete');
 Route::post('/search-users/{id}', 'App\Http\Controllers\api\UsersController@search');
-
-
-
-
-
-
-//
+//employees
+Route::get('/get-employees', [EmployeesController::class, 'read']);
+Route::delete('/delete-employee/{id}', [EmployeesController::class, 'delete']);
+Route::get('/get-role', [EmployeesController::class, 'getRole']);
+Route::post('/add-employee', [EmployeesController::class, 'create']);
+Route::put('/update-employee/{id}', [EmployeesController::class, 'update']);

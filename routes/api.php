@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::post('/login', 'App\Http\Controllers\api\LoginController@login');
-Route::get('/change-password', 'App\Http\Controllers\api\ChangePasswordController@changePassword');
+Route::get('/change-password', 'App\Http\Controllers\api\ChangePasswordController@index');
 //Product
 Route::post('/add-product', 'App\Http\Controllers\api\ProductsController@create');
 Route::get('/get-product', 'App\Http\Controllers\api\ProductsController@read');

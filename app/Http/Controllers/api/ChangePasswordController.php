@@ -4,6 +4,9 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\MailNotify;
+use Exception;
 
 class ChangePasswordController extends Controller
 {
@@ -19,7 +22,17 @@ class ChangePasswordController extends Controller
     }
     public function index()
     {
-        //
+        $data = [
+            'subject' => 'Reset Password',
+            'body' => 'HI! Are your sure to reset your password?'
+        ];
+
+        try {
+            Mail::to("gloriastfnysps@gmail.com")->send(new MailNotify($data));
+            return response()->json(['message' => "Success send email"]);
+        } catch (Exception $th) {
+            return response()->json(['message' => "failed to send email", "error" => $th->getMessage()]);
+        }
     }
 
     /**

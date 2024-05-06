@@ -6,21 +6,27 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class CustodiansController extends Controller
+class PromoPointController extends Controller
 {
-    public function create(Request $request)
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create(Request $request, $id)
     {
-        $data = $request->all();
-        DB::table('custodians')->insert([
-            'name' => $data['name'],
-            'deposit_time' => $data['deposit_time'],
-            'amount' => $data['amount'],
-        ]);
+        $data = DB::table('users')->where('user_id', '=', $id)->first();
+
+        $temp = $request->all()["total_point"];
+        $temp2 = (int) $data->total_point;
+
+        $dataTotalPoint = $temp2 + $temp;
+        $dataUpdate = DB::table('users')->where('user_id', $id)->update(['total_point' => $dataTotalPoint]);
         if ($data) {
             return response()->json([
                 'status' => 'success',
                 'message' => 'Data has been added',
-                'data' => $data
+                'data' => $dataUpdate
             ]);
         } else {
             return response()->json([
@@ -33,7 +39,7 @@ class CustodiansController extends Controller
 
     public function read()
     {
-        $data = DB::table('custodians')->get();
+        $data = DB::table('users')->where('role_id', '=', 5)->get();
         if ($data) {
             return response()->json([
                 'status' => 'success',
@@ -51,12 +57,11 @@ class CustodiansController extends Controller
 
     public function update(Request $request, $id)
     {
-        $data = DB::table('custodians')->where('custodian_id', $id)->get();
-        $dataUpdate = DB::table('custodians')->where('custodian_id', $id)->update([
-            'name' => $request->name,
-            'amount' => $request->amount,
+        $data = DB::table('users')->where('user_id', $id)->get();
+        $dataUpdate = DB::table('users')->where('user_id', $id)->update([
+            'total_point' => $request->total_point,
         ]);
-        $data = DB::table('custodians')->where('custodian_id', $id)->get();
+        $data = DB::table('users')->where('user_id', $id)->get();
         if ($dataUpdate) {
             return response()->json([
                 'status' => 'success',
@@ -74,13 +79,8 @@ class CustodiansController extends Controller
 
     public function delete($id)
     {
-        $data = DB::table('custodians')->where('custodian_id', $id)->get();
+        $data = DB::table('users')->where('user_id', $id)->update(['total_point' => 0]);
         if ($data) {
-            $data = DB::table('custodians')->where('custodian_id', $id)->delete();
-            DB::table('products')->where('product_id', $id)->delete();
-
-
-
             return response()->json([
                 'status' => 'success',
                 'message' => 'Data has been deleted',
@@ -97,7 +97,7 @@ class CustodiansController extends Controller
 
     public function search($id)
     {
-        $data = DB::table('custodians')->where('custodian_id', $id)->get();
+        $data = DB::table('users')->where('user_id', $id)->get();
         if ($data) {
             return response()->json([
                 'status' => 'success',

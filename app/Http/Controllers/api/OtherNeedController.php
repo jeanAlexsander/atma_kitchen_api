@@ -6,15 +6,20 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class CustodiansController extends Controller
+class OtherNeedController extends Controller
 {
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function create(Request $request)
     {
         $data = $request->all();
-        DB::table('custodians')->insert([
+        DB::table('other_need')->insert([
             'name' => $data['name'],
-            'deposit_time' => $data['deposit_time'],
-            'amount' => $data['amount'],
+            'cost' => $data['cost'],
+            'Date_of_expense' => $data['Date_of_expense'],
         ]);
         if ($data) {
             return response()->json([
@@ -33,7 +38,7 @@ class CustodiansController extends Controller
 
     public function read()
     {
-        $data = DB::table('custodians')->get();
+        $data = DB::table('other_need')->get();
         if ($data) {
             return response()->json([
                 'status' => 'success',
@@ -51,12 +56,13 @@ class CustodiansController extends Controller
 
     public function update(Request $request, $id)
     {
-        $data = DB::table('custodians')->where('custodian_id', $id)->get();
-        $dataUpdate = DB::table('custodians')->where('custodian_id', $id)->update([
+        $data = DB::table('other_need')->where('other_need_id', $id)->get();
+        $dataUpdate = DB::table('other_need')->where('other_need_id', $id)->update([
             'name' => $request->name,
-            'amount' => $request->amount,
+            'cost' => $request->cost,
+            'Date_of_expense' => $request->Date_of_expense,
         ]);
-        $data = DB::table('custodians')->where('custodian_id', $id)->get();
+        $data = DB::table('other_need')->where('other_need_id', $id)->get();
         if ($dataUpdate) {
             return response()->json([
                 'status' => 'success',
@@ -74,13 +80,9 @@ class CustodiansController extends Controller
 
     public function delete($id)
     {
-        $data = DB::table('custodians')->where('custodian_id', $id)->get();
+        $data = DB::table('other_need')->where('other_need_id', $id)->get();
         if ($data) {
-            $data = DB::table('custodians')->where('custodian_id', $id)->delete();
-            DB::table('products')->where('product_id', $id)->delete();
-
-
-
+            DB::table('other_need')->where('other_need_id', $id)->delete();
             return response()->json([
                 'status' => 'success',
                 'message' => 'Data has been deleted',
@@ -97,7 +99,7 @@ class CustodiansController extends Controller
 
     public function search($id)
     {
-        $data = DB::table('custodians')->where('custodian_id', $id)->get();
+        $data = DB::table('other_need')->where('other_need_id', $id)->get();
         if ($data) {
             return response()->json([
                 'status' => 'success',

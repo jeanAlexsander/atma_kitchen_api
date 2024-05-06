@@ -16,6 +16,7 @@ class IngredientsController extends Controller
             'unit' => $data['unit'],
             'amount' => $data['amount'],
         ]);
+
         if ($data) {
             return response()->json([
                 'status' => 'success',
@@ -53,6 +54,8 @@ class IngredientsController extends Controller
     {
         $data = DB::table('ingredients')->where('ingredient_id', $id)->get();
         $dataUpdate = DB::table('ingredients')->where('ingredient_id', $id)->update([
+            'name' => $request->name,
+            'unit' => $request->unit,
             'amount' => $request->amount,
         ]);
         $data = DB::table('ingredients')->where('ingredient_id', $id)->get();

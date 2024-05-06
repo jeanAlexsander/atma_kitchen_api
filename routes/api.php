@@ -8,6 +8,10 @@ use App\Http\Controllers\api\HistoryController;
 
 use App\Http\Controllers\api\PositionController;
 use App\Http\Controllers\api\SalaryController;
+use App\Http\Controllers\api\OtherNeedController;
+use App\Http\Controllers\api\PromoPointController;
+use App\Http\Controllers\api\PurchaseIngredientsController;
+use App\Http\Controllers\api\PurchaseMaterialsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -26,6 +30,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/login', 'App\Http\Controllers\api\LoginController@login');
 Route::get('/change-password', 'App\Http\Controllers\api\ChangePasswordController@index');
+//Promo Point
+Route::post('/add-promoPoint/{id}', [PromoPointController::class, 'create']);
+Route::get('/get-promoPoint', [PromoPointController::class, 'read']);
+Route::put('/update-promoPoint/{id}', [PromoPointController::class, 'update']);
+Route::delete('/delete-promoPoint/{id}', [PromoPointController::class, 'delete']);
 //Product
 Route::post('/add-product', 'App\Http\Controllers\api\ProductsController@create');
 Route::get('/get-product', 'App\Http\Controllers\api\ProductsController@read');
@@ -76,14 +85,13 @@ Route::delete('/delete-employee/{id}', [EmployeesController::class, 'delete']);
 Route::get('/get-role', [EmployeesController::class, 'getRole']);
 Route::post('/add-employee', [EmployeesController::class, 'create']);
 Route::put('/update-employee/{id}', [EmployeesController::class, 'update']);
-//position
-Route::get('/get-position', [PositionController::class, 'read']);
-Route::delete('/delete-position/{id}', [PositionController::class, 'delete']);
-Route::post('/add-position/{id}', [PositionController::class, 'create']);
-Route::put('/update-position/{id}', [PositionController::class, 'update']);
-Route::get('/fetch-position', [PositionController::class, 'getPosition']);
-//salary
-Route::get('/get-salary', [SalaryController::class, 'read']);
-Route::put('/update-salary/{id}', [SalaryController::class, 'update']);
-
-
+//Other Need
+Route::post('/add-otherNeed', [OtherNeedController::class, 'create']);
+Route::get('/get-otherNeed', [OtherNeedController::class, 'read']);
+Route::delete('/delete-otherNeed/{id}', [OtherNeedController::class, 'delete']);
+Route::put('/update-otherNeed/{id}', [OtherNeedController::class, 'update']);
+//Purchase Material
+Route::post('/add-purchaseIngredients', [PurchaseIngredientsController::class, 'create']);
+Route::get('/get-purchaseIngredients', [PurchaseIngredientsController::class, 'read']);
+Route::delete('/delete-purchaseIngredients/{id}', [PurchaseIngredientsController::class, 'delete']);
+Route::put('/update-purchaseIngredients/{id}', [PurchaseIngredientsController::class, 'update']);

@@ -6,15 +6,22 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class CustodiansController extends Controller
+class PurchaseIngredientsController extends Controller
 {
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function create(Request $request)
     {
         $data = $request->all();
-        DB::table('custodians')->insert([
+        DB::table('ingredients')->insert([
             'name' => $data['name'],
-            'deposit_time' => $data['deposit_time'],
+            'unit' => $data['unit'],
             'amount' => $data['amount'],
+            'price_per_unit' => $data['price_per_unit'],
+            'total' => $data['total'],
         ]);
         if ($data) {
             return response()->json([
@@ -33,7 +40,7 @@ class CustodiansController extends Controller
 
     public function read()
     {
-        $data = DB::table('custodians')->get();
+        $data = DB::table('ingredients')->get();
         if ($data) {
             return response()->json([
                 'status' => 'success',
@@ -51,12 +58,15 @@ class CustodiansController extends Controller
 
     public function update(Request $request, $id)
     {
-        $data = DB::table('custodians')->where('custodian_id', $id)->get();
-        $dataUpdate = DB::table('custodians')->where('custodian_id', $id)->update([
+        $data = DB::table('ingredients')->where('ingredient_id', $id)->get();
+        $dataUpdate = DB::table('ingredients')->where('ingredient_id', $id)->update([
             'name' => $request->name,
+            'unit' => $request->unit,
             'amount' => $request->amount,
+            'price_per_unit' => $request->price_per_unit,
+            'total' => $request->total,
         ]);
-        $data = DB::table('custodians')->where('custodian_id', $id)->get();
+        $data = DB::table('ingredients')->where('ingredient_id', $id)->get();
         if ($dataUpdate) {
             return response()->json([
                 'status' => 'success',
@@ -74,13 +84,9 @@ class CustodiansController extends Controller
 
     public function delete($id)
     {
-        $data = DB::table('custodians')->where('custodian_id', $id)->get();
+        $data = DB::table('ingredients')->where('ingredient_id', $id)->get();
         if ($data) {
-            $data = DB::table('custodians')->where('custodian_id', $id)->delete();
-            DB::table('products')->where('product_id', $id)->delete();
-
-
-
+            DB::table('ingredients')->where('ingredient_id', $id)->delete();
             return response()->json([
                 'status' => 'success',
                 'message' => 'Data has been deleted',
@@ -97,7 +103,7 @@ class CustodiansController extends Controller
 
     public function search($id)
     {
-        $data = DB::table('custodians')->where('custodian_id', $id)->get();
+        $data = DB::table('ingredients')->where('ingredient_id', $id)->get();
         if ($data) {
             return response()->json([
                 'status' => 'success',

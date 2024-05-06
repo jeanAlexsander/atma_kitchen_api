@@ -1,6 +1,11 @@
 <?php
 
 use App\Http\Controllers\api\EmployeesController;
+use App\Http\Controllers\api\PresensiController;
+use App\Http\Controllers\api\ChangePasswordController;
+use App\Http\Controllers\api\HistoryController;
+
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -25,6 +30,7 @@ Route::get('/get-product', 'App\Http\Controllers\api\ProductsController@read');
 Route::post('/update-product/{id}', 'App\Http\Controllers\api\ProductsController@update');
 Route::delete('/delete-product/{id}', 'App\Http\Controllers\api\ProductsController@delete');
 Route::post('/search-product/{id}', 'App\Http\Controllers\api\ProductsController@search');
+Route::get('/get-categories', 'App\Http\Controllers\api\ProductsController@getCategory');
 //Recipes
 Route::post('/add-recipes', 'App\Http\Controllers\api\RecipesController@create');
 Route::get('/get-recipes', 'App\Http\Controllers\api\RecipesController@read');
@@ -49,6 +55,7 @@ Route::get('/get-hampers', 'App\Http\Controllers\api\HampersController@read');
 Route::post('/update-hampers/{id}', 'App\Http\Controllers\api\HampersController@update');
 Route::delete('/delete-hampers/{id}', 'App\Http\Controllers\api\HampersController@delete');
 Route::post('/search-hampers/{id}', 'App\Http\Controllers\api\HampersController@search');
+Route::get('/get-image/{gambarName}', 'App\Http\Controllers\api\HampersController@getImage');
 //Custodians
 Route::post('/add-custodians', 'App\Http\Controllers\api\CustodiansController@create');
 Route::get('/get-custodians', 'App\Http\Controllers\api\CustodiansController@read');
@@ -67,3 +74,12 @@ Route::delete('/delete-employee/{id}', [EmployeesController::class, 'delete']);
 Route::get('/get-role', [EmployeesController::class, 'getRole']);
 Route::post('/add-employee', [EmployeesController::class, 'create']);
 Route::put('/update-employee/{id}', [EmployeesController::class, 'update']);
+//presensi
+Route::get('/get-presensi', [PresensiController::class, 'read']);
+Route::post('/set-presensi/{id}', [PresensiController::class, 'setAbsent']);
+//change password
+Route::post('/change-password', [ChangePasswordController::class, 'index']);
+Route::post('/new-password', [ChangePasswordController::class, 'changePassword']);
+
+//history
+Route::get('/get-history/{id}', [HistoryController::class, 'read']);

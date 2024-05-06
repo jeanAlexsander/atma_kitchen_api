@@ -13,8 +13,8 @@ class LoginController extends Controller
     public function login(Request $request)
     {
         $check = DB::table('users')
-            ->where('email', $request->email)
-            ->where('password_hash', $request->password_hash)
+            ->where('email', '=', $request->email)
+            ->where('password_hash', '=', $request->password_hash)
             ->first();
 
         if (is_null($check)) {

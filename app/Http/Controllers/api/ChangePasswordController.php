@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\MailNotify;
 use Exception;
+use Illuminate\Support\Facades\DB;
 
 class ChangePasswordController extends Controller
 {
@@ -16,19 +17,23 @@ class ChangePasswordController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function changePassword()
+    public function changePassword(Request $request)
     {
-        return Response()->json(['message' => "hello world"]);
+        DB::table('users')
+            ->where('email', $request->email)
+            ->update(['password_hash' => $request->password]);
+        return response()->json(['message' => "Success change password"], 200);
     }
-    public function index()
+    public function index(Request $request)
     {
         $data = [
             'subject' => 'Reset Password',
-            'body' => 'HI! Are your sure to reset your password?'
+            'body' => 'HI! Are your sure to reset your password?',
+            'email' => $request->email,
         ];
 
         try {
-            Mail::to("gloriastfnysps@gmail.com")->send(new MailNotify($data));
+            Mail::to($request->email)->send(new MailNotify($data));
             return response()->json(['message' => "Success send email"]);
         } catch (Exception $th) {
             return response()->json(['message' => "failed to send email", "error" => $th->getMessage()]);

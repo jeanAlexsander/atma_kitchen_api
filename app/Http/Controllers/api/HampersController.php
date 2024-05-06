@@ -11,10 +11,19 @@ class HampersController extends Controller
     public function create(Request $request)
     {
         $data = $request->all();
+
+
+        if ($request->hasFile('image')) {
+            $request->file('image')->move('images/', $request->file('image')->getClientOriginalName());
+            $data['image'] = $request->file('image')->getClientOriginalName();
+        }
+
+        $data['image'] = $this->getImage($data['image']);
+
+
         DB::table('hampers')->insert([
-            'hampers_id' => $data['hampers_id'],
             'name' => $data['name'],
-            'image' => null,
+            'image' => $data['image'],
             'hampers_status' => $data['hampers_status'],
         ]);
         if ($data) {
@@ -31,6 +40,26 @@ class HampersController extends Controller
             ]);
         }
     }
+
+    public function getImage($gambarName)
+    {
+        // Ambil jalur direktori gambar
+        $directory = public_path('images');
+
+        // Cek apakah file yang diminta ada dalam direktori
+        $filePath = $directory . '/' . $gambarName;
+        if (file_exists($filePath)) {
+            // Jika file ada, kembalikan URL-nya
+            $imageUrl = asset('images/' . $gambarName);
+            return $imageUrl;
+        } else {
+            // Jika file tidak ditemukan, kembalikan pesan error atau null
+            return null; // atau throw new \Exception("File not found");
+        }
+    }
+
+
+
 
     public function read()
     {
@@ -53,9 +82,24 @@ class HampersController extends Controller
     public function update(Request $request, $id)
     {
         $data = DB::table('hampers')->where('hampers_id', $id)->get();
+
+        $temp = $request->all();
+
+
+        if ($request->hasFile('image')) {
+            $request->file('image')->move('images/', $request->file('image')->getClientOriginalName());
+            $temp['image'] = $request->file('image')->getClientOriginalName();
+        }
+
+        $temp['image'] = $this->getImage($temp['image']);
+
+
         $dataUpdate = DB::table('hampers')->where('hampers_id', $id)->update([
-            'amount' => $request->amount,
+            'name' => $temp['name'],
+            'image' => $temp['image'],
+            'hampers_status' => $temp['hampers_status'],
         ]);
+
         $data = DB::table('hampers')->where('hampers_id', $id)->get();
         if ($dataUpdate) {
             return response()->json([

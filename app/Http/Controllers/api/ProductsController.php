@@ -8,17 +8,40 @@ use Illuminate\Support\Facades\DB;
 
 class ProductsController extends Controller
 {
+
+
+    public function getImage($gambarName)
+    {
+        $directory = public_path('images');
+        $filePath = $directory . '/' . $gambarName;
+        if (file_exists($filePath)) {
+            $imageUrl = asset('images/' . $gambarName);
+            return $imageUrl;
+        } else {
+            return null;
+        }
+    }
+
+
     public function create(Request $request)
     {
         $data = $request->all();
+
+        if ($request->hasFile('image')) {
+            $request->file('image')->move('images/', $request->file('image')->getClientOriginalName());
+            $data['image'] = $request->file('image')->getClientOriginalName();
+        }
+
+        $data['image'] = $this->getImage($data['image']);
+
         DB::table('products')->insert([
-            'custodian_id' => $data['custodian_id'],
             'name' => $data['name'],
             'price' => $data['price'],
             'quantity' => $data['quantity'],
             'image' => $data['image'],
             'category_id' => $data['category_id'],
         ]);
+
         if ($data) {
             return response()->json([
                 'status' => 'success',
@@ -52,16 +75,44 @@ class ProductsController extends Controller
         }
     }
 
+    public function getCategory()
+    {
+        $data = DB::table('product_categories')->get();
+        if ($data) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Data has been retrieved',
+                'data' => $data
+            ]);
+        } else {
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'Data cannot be retrieved',
+                'data' => $data
+            ]);
+        }
+    }
+
     public function update(Request $request, $id)
     {
         $data = DB::table('products')->where('product_id', $id)->get();
+
+        $temp = $request->all();
+
+
+        if ($request->hasFile('image')) {
+            $request->file('image')->move('images/', $request->file('image')->getClientOriginalName());
+            $temp['image'] = $request->file('image')->getClientOriginalName();
+        }
+
+        $temp['image'] = $this->getImage($temp['image']);
+
         $dataUpdate = DB::table('products')->where('product_id', $id)->update([
-            'custodian_id' => $request->custodian_id,
-            'name' => $request->name,
-            'price' => $request->price,
-            'quantity' => $request->quantity,
-            'image' => $request->image,
-            'category_id' => $request->category_id,
+            'name' => $temp['name'],
+            'price' => $temp['price'],
+            'quantity' => $temp['quantity'],
+            'image' => $temp['image'],
+            'category_id' => $temp['category_id'],
         ]);
         $data = DB::table('products')->where('product_id', $id)->get();
         if ($dataUpdate) {

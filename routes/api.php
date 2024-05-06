@@ -6,6 +6,8 @@ use App\Http\Controllers\api\ChangePasswordController;
 use App\Http\Controllers\api\HistoryController;
 
 
+use App\Http\Controllers\api\PositionController;
+use App\Http\Controllers\api\SalaryController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -32,11 +34,11 @@ Route::delete('/delete-product/{id}', 'App\Http\Controllers\api\ProductsControll
 Route::post('/search-product/{id}', 'App\Http\Controllers\api\ProductsController@search');
 Route::get('/get-categories', 'App\Http\Controllers\api\ProductsController@getCategory');
 //Recipes
-Route::post('/add-recipes', 'App\Http\Controllers\api\RecipesController@create');
-Route::get('/get-recipes', 'App\Http\Controllers\api\RecipesController@read');
-Route::post('/update-recipes/{id}', 'App\Http\Controllers\api\RecipesController@update');
-Route::delete('/delete-recipes/{id}', 'App\Http\Controllers\api\RecipesController@delete');
-Route::post('/search-recipes/{id}', 'App\Http\Controllers\api\RecipesController@search');
+Route::post('/add-recipes_temp', 'App\Http\Controllers\api\RecipesTempController@create');
+Route::get('/get-recipes_temp', 'App\Http\Controllers\api\RecipesTempController@read');
+Route::put('/update-recipes_temp/{id}', 'App\Http\Controllers\api\RecipesTempController@update');
+Route::delete('/delete-recipes_temp/{id}', 'App\Http\Controllers\api\RecipesTempController@delete');
+Route::post('/search-recipes_temp/{id}', 'App\Http\Controllers\api\RecipesTempController@search');
 //RecipeIngredients
 Route::post('/add-recipeIngredients', 'App\Http\Controllers\api\RecipeIngredientsController@create');
 Route::get('/get-recipeIngredients', 'App\Http\Controllers\api\RecipeIngredientsController@read');
@@ -74,12 +76,14 @@ Route::delete('/delete-employee/{id}', [EmployeesController::class, 'delete']);
 Route::get('/get-role', [EmployeesController::class, 'getRole']);
 Route::post('/add-employee', [EmployeesController::class, 'create']);
 Route::put('/update-employee/{id}', [EmployeesController::class, 'update']);
-//presensi
-Route::get('/get-presensi', [PresensiController::class, 'read']);
-Route::post('/set-presensi/{id}', [PresensiController::class, 'setAbsent']);
-//change password
-Route::post('/change-password', [ChangePasswordController::class, 'index']);
-Route::post('/new-password', [ChangePasswordController::class, 'changePassword']);
+//position
+Route::get('/get-position', [PositionController::class, 'read']);
+Route::delete('/delete-position/{id}', [PositionController::class, 'delete']);
+Route::post('/add-position/{id}', [PositionController::class, 'create']);
+Route::put('/update-position/{id}', [PositionController::class, 'update']);
+Route::get('/fetch-position', [PositionController::class, 'getPosition']);
+//salary
+Route::get('/get-salary', [SalaryController::class, 'read']);
+Route::put('/update-salary/{id}', [SalaryController::class, 'update']);
 
-//history
-Route::get('/get-history/{id}', [HistoryController::class, 'read']);
+

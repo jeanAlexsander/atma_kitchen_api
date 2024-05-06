@@ -6,44 +6,35 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class RecipesController extends Controller
+class RecipesTempController extends Controller
 {
     public function create(Request $request)
-    {
-        $data = $request->all();
-        DB::table('recipes')->insert([
-            'product_id' => $data['product_id'],
+{
+    $data = $request->all();
+    $result = DB::table('recipes_temp')->insert(['product_name' => $data['product_name'], 'deskripsi' => $data['deskripsi']]);
+
+    if ($result) {
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Data has been added',
+            'data' => $data
         ]);
-        if ($data) {
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Data has been added',
-                'data' => $data
-            ]);
-        } else {
-            return response()->json([
-                'status' => 'failed',
-                'message' => 'Data cannot be added',
-                'data' => $data
-            ]);
-        }
+    } else {
+        return response()->json([
+            'status' => 'failed',
+            'message' => 'Data cannot be added',
+            'data' => $data
+        ]);
     }
+}
 
-    public function read()
-    {
-        // $data = DB::table('recipe_ingredients')
-        // ->select('recipe_ingredients.*', 'recipes.*', 'products.*')
-        // ->join('recipes', 'recipe_ingredients.recipe_id', '=', 'recipes.recipe_id')
-        // ->join('products', 'recipes.product_id', '=', 'products.product_id')
-        // ->distinct()
-        // ->get();
 
-        $data = DB::table('recipes')->join('products', 'recipes.product_id', '=', 'products.product_id')->get();
-
-        if ($data) {
+    public function read() {
+        $data = DB::table('recipes_temp')->get();
+        if($data){
             return response()->json([
                 'status' => 'success',
-                'message' => 'Data has been retrieved',
+                'message' => 'Data has been Retrieved',
                 'data' => $data
             ]);
         } else {
@@ -53,16 +44,16 @@ class RecipesController extends Controller
                 'data' => $data
             ]);
         }
+
     }
 
     public function update(Request $request, $id)
     {
-        $data = DB::table('recipes')->where('product_id', $id)->get();
-        $dataUpdate = DB::table('recipes')->where('product_id', $id)->update([
-            'product_id' => $request->product_id,
-        ]);
-        $data = DB::table('recipes')->where('product_id', $id)->get();
-        if ($dataUpdate) {
+        $data = DB::table('recipes_temp')
+            ->where('recipe_id', $id)
+            ->update(['deskripsi' => $request->deskripsi]);
+        
+        if($data){
             return response()->json([
                 'status' => 'success',
                 'message' => 'Data has been updated',
@@ -70,18 +61,18 @@ class RecipesController extends Controller
             ]);
         } else {
             return response()->json([
-                'status' => 'failed',
-                'message' => 'Data cannot be updated',
-                'data' => $data
+                'status' => 'error',
+                'message' => 'Failed to update data'
             ]);
         }
     }
 
+
     public function delete($id)
     {
-        $data = DB::table('recipes')->where('product_id', $id)->get();
+        $data = DB::table('recipes_temp')->where('recipe_id', $id)->get();
         if ($data) {
-            DB::table('recipes')->where('product_id', $id)->delete();
+            DB::table('recipes_temp')->where('recipe_id', $id)->delete();
             return response()->json([
                 'status' => 'success',
                 'message' => 'Data has been deleted',
@@ -98,7 +89,7 @@ class RecipesController extends Controller
 
     public function search($id)
     {
-        $data = DB::table('recipes')->where('recipe_id', $id)->get();
+        $data = DB::table('recipes_temp')->where('recipe_id', $id)->get();
         if ($data) {
             return response()->json([
                 'status' => 'success',

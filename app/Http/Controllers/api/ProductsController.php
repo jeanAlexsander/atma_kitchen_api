@@ -27,6 +27,10 @@ class ProductsController extends Controller
     {
         $data = $request->all();
 
+        $cekCustodianId = $request->customer_id;
+
+
+
         if ($request->hasFile('image')) {
             $request->file('image')->move('images/', $request->file('image')->getClientOriginalName());
             $data['image'] = $request->file('image')->getClientOriginalName();
@@ -34,12 +38,24 @@ class ProductsController extends Controller
 
         $data['image'] = $this->getImage($data['image']);
 
+
+        if ($cekCustodianId == null) {
+            DB::table('products')->insert([
+                'name' => $data['name'],
+                'price' => $data['price'],
+                'quantity' => $data['quantity'],
+                'image' => $data['image'],
+                'category_id' => $data['category_id'],
+                'custodian_id' => null
+            ]);
+        }
         DB::table('products')->insert([
             'name' => $data['name'],
             'price' => $data['price'],
             'quantity' => $data['quantity'],
             'image' => $data['image'],
             'category_id' => $data['category_id'],
+            'custodian_id' => $data['custodian_id']
         ]);
 
         if ($data) {

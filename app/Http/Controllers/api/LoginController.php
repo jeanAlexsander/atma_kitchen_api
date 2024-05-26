@@ -13,9 +13,11 @@ class LoginController extends Controller
     public function login(Request $request)
     {
         $check = DB::table('users')
-            ->where('email', '=', $request->email)
-            ->where('password_hash', '=', $request->password_hash)
+            ->where('email', $request->email)
+            ->where('password_hash', $request->password_hash)
             ->first();
+
+
 
         if (is_null($check)) {
             return response()->json([
@@ -35,5 +37,25 @@ class LoginController extends Controller
                 'data' => $user
             ], 200);
         }
+    }
+
+    public function register(Request $request)
+    {
+
+
+        $user = DB::table('users')
+            ->insert([
+                'email' => $request->email,
+                'first_name' => $request->first_name,
+                'last_name' => $request->last_name,
+                'password_hash' => $request->password_hash,
+                'role_id' => 5
+            ]);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Register success',
+            'data' => $user
+        ], 200);
     }
 }

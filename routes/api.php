@@ -12,6 +12,10 @@ use App\Http\Controllers\api\OtherNeedController;
 use App\Http\Controllers\api\PromoPointController;
 use App\Http\Controllers\api\PurchaseIngredientsController;
 use App\Http\Controllers\api\PurchaseMaterialsController;
+use App\Http\Controllers\api\UsersController;
+use App\Http\Controllers\api\GeneralInformationController;
+
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -29,7 +33,9 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::post('/login', 'App\Http\Controllers\api\LoginController@login');
-Route::get('/change-password', 'App\Http\Controllers\api\ChangePasswordController@index');
+Route::POST('/change-password', 'App\Http\Controllers\api\ChangePasswordController@index');
+Route::post('/action-change-password', 'App\Http\Controllers\api\ChangePasswordController@changePassword');
+Route::post('/register', 'App\Http\Controllers\api\LoginController@register');
 //Promo Point
 Route::post('/add-promoPoint/{id}', [PromoPointController::class, 'create']);
 Route::get('/get-promoPoint', [PromoPointController::class, 'read']);
@@ -79,6 +85,7 @@ Route::get('/get-users', 'App\Http\Controllers\api\UsersController@read');
 Route::post('/update-users/{id}', 'App\Http\Controllers\api\UsersController@update');
 Route::delete('/delete-users/{id}', 'App\Http\Controllers\api\UsersController@delete');
 Route::post('/search-users/{id}', 'App\Http\Controllers\api\UsersController@search');
+Route::post('/update-users/{id}', [UsersController::class, 'changeUser']);
 //employees
 Route::get('/get-employees', [EmployeesController::class, 'read']);
 Route::delete('/delete-employee/{id}', [EmployeesController::class, 'delete']);
@@ -95,3 +102,49 @@ Route::post('/add-purchaseIngredients', [PurchaseIngredientsController::class, '
 Route::get('/get-purchaseIngredients', [PurchaseIngredientsController::class, 'read']);
 Route::delete('/delete-purchaseIngredients/{id}', [PurchaseIngredientsController::class, 'delete']);
 Route::put('/update-purchaseIngredients/{id}', [PurchaseIngredientsController::class, 'update']);
+Route::get('/get-purchase-ingredient', [PurchaseIngredientsController::class, 'readPurchaseData']);
+Route::post('/add-purchase-ingredient', [PurchaseIngredientsController::class, 'addPurchaseIngrediets']);
+Route::put('/update-purchase-ingredient/{id}', [PurchaseIngredientsController::class, 'updatePurchaseData']);
+Route::delete('/delete-purchase-ingredient/{id}', [PurchaseIngredientsController::class, 'deletePurchaseIngredient']);
+//position
+Route::get('/get-position', [PositionController::class, 'read']);
+Route::delete('/delete-position/{id}', [PositionController::class, 'delete']);
+Route::post('/add-position/{id}', [PositionController::class, 'create']);
+Route::put('/update-position/{id}', [PositionController::class, 'update']);
+Route::get('/fetch-position', [PositionController::class, 'getPosition']);
+//salary
+Route::get('/get-salary', [SalaryController::class, 'read']);
+Route::put('/update-salary/{id}', [SalaryController::class, 'update']);
+//temp recipe
+Route::post('/add-recipes_temp', 'App\Http\Controllers\api\RecipesTempController@create');
+Route::get('/get-recipes_temp', 'App\Http\Controllers\api\RecipesTempController@read');
+Route::put('/update-recipes_temp/{id}', 'App\Http\Controllers\api\RecipesTempController@update');
+Route::delete('/delete-recipes_temp/{id}', 'App\Http\Controllers\api\RecipesTempController@delete');
+Route::post('/search-recipes_temp/{id}', 'App\Http\Controllers\api\RecipesTempController@search');
+//history
+Route::get('/get-history/{id}', [HistoryController::class, 'read']);
+Route::get('/customer-admin', [HistoryController::class, 'getCustomer']);
+//presensi
+Route::get('/get-presensi', [PresensiController::class, 'read']);
+Route::post('/set-presensi/{id}', [PresensiController::class, 'setAbsent']);
+//general information
+Route::get('/get-product-information', [GeneralInformationController::class, 'readProduct']);
+Route::get('/get-cutodians-product-information', [GeneralInformationController::class, 'readCustodianProduct']);
+Route::get('/get-ready-stock', [GeneralInformationController::class, 'readTodayStock']);
+Route::post('/pre-order', [GeneralInformationController::class, 'preOrder']);
+Route::get('/get-not-confirm-order', [GeneralInformationController::class, 'readPreOrder']);
+Route::post('/confirm-order', [GeneralInformationController::class, 'confirmOrder']);
+Route::post('/decline-order', [GeneralInformationController::class, 'declineOrder']);
+Route::post('/missing-ingredients/{id}', [GeneralInformationController::class, 'missingIngredients']);
+Route::post('/total-distance', [GeneralInformationController::class, 'addOnDelivery']);
+Route::post('/get-point', [GeneralInformationController::class, 'countPoint']);
+Route::get('/not-confirm-data', [GeneralInformationController::class, 'notConfirmOrder']);
+Route::get('/confirm-distance', [GeneralInformationController::class, 'getConfirmOrder']);
+Route::post('/confirm-distance-order', [GeneralInformationController::class, 'confirmOrderDistance']);
+Route::post('/get-payment', [GeneralInformationController::class, 'getPaymentUser']);
+Route::post('/get-payment-order', [GeneralInformationController::class, 'getDetailOrder']);
+Route::post('/customer-payment', [GeneralInformationController::class, 'customerConfirmPayment']);
+Route::get('/get-mo-confirm', [GeneralInformationController::class, 'orderMOConfirmation']);
+Route::post('/get-missing-ingredient', [GeneralInformationController::class, 'countMissingIngredient']);
+Route::post('/mo-confirm-order', [GeneralInformationController::class, 'moConfirmOrder']);
+Route::post('/mo-decline-order', [GeneralInformationController::class, 'moRejectOrder']);

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use PhpParser\Node\Expr\FuncCall;
 
 class PurchaseIngredientsController extends Controller
 {
@@ -41,11 +42,25 @@ class PurchaseIngredientsController extends Controller
     public function read()
     {
         $data = DB::table('ingredients')->get();
+        $dataDes = [];
+
+        foreach ($data as $key => $value) {
+            array_unshift($dataDes, [
+                'ingredient_id' => $value->ingredient_id,
+                'name' => $value->name,
+                'unit' => $value->unit,
+                'amount' => $value->amount,
+                'price_per_unit' => $value->price_per_unit
+            ]);
+        }
+
+
+
         if ($data) {
             return response()->json([
                 'status' => 'success',
                 'message' => 'Data has been retrieved',
-                'data' => $data
+                'data' => $dataDes
             ]);
         } else {
             return response()->json([
@@ -117,5 +132,81 @@ class PurchaseIngredientsController extends Controller
                 'data' => $data
             ]);
         }
+    }
+
+    public function addPurchaseIngrediets(Request $request)
+    {
+        $data = DB::table('purchase_ingredients')->insert([
+            'ingredient_id' => $request->ingredient_id,
+            'total_price' => $request->total_price,
+            'total_buy' => $request->total_buy,
+            'time_buy' => now()
+        ]);
+
+        return response()->json([
+            'status' => "success",
+            'messege' => "good",
+            "data" => $data
+        ], 200);
+    }
+
+    public function readPurchaseData()
+    {
+        $data = DB::table('purchase_ingredients')
+            ->join('ingredients', 'purchase_ingredients.ingredient_id', '=', 'ingredients.ingredient_id')
+            ->whereDate('time_buy', '=', date('Y-m-d'))
+            ->get();
+
+        $dataDes = [];
+
+        foreach ($data as $key => $value) {
+            array_unshift($dataDes, [
+                'purchase_id' => $value->purchase_id,
+                'ingredient_id' => $value->ingredient_id,
+                'name' => $value->name,
+                'unit' => $value->unit,
+                'amount' => $value->amount,
+                'price_per_unit' => $value->price_per_unit,
+                'total_price' => $value->total_price,
+                'time_buy' => $value->time_buy,
+                'total_buy' => $value->total_buy
+            ]);
+        }
+
+        return response()->json(
+            [
+                "status" => "ok",
+                "message" => "greed",
+                "data" => $dataDes
+            ],
+            200
+        );
+    }
+    public function updatePurchaseData(Request $request, $id)
+    {
+        $data = DB::table('purchase_ingredients')->where('purchase_id', $id)->update([
+            'total_buy' => $request->total_buy,
+            'total_price' => $request->total_price,
+            'time_buy' => now()
+        ]);
+
+        return response()->json(
+            [
+                'status' => 'ok',
+                'message' => 'mantap',
+                'data' => $data
+            ],
+            200
+        );
+    }
+
+    public function deletePurchaseIngredient($id)
+    {
+        $data = DB::table('purchase_ingredients')->where('purchase_id', $id)->delete();
+        return response()->json([
+            'status' => 'success',
+            'message' => 'ok',
+            'data' => $data
+        ], 200);
     }
 }

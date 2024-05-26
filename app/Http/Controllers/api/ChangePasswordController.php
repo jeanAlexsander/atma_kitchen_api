@@ -21,7 +21,7 @@ class ChangePasswordController extends Controller
     {
         DB::table('users')
             ->where('email', $request->email)
-            ->update(['password_hash' => $request->password]);
+            ->update(['password_hash' => $request->password_hash]);
         return response()->json(['message' => "Success change password"], 200);
     }
     public function index(Request $request)
@@ -30,6 +30,7 @@ class ChangePasswordController extends Controller
             'subject' => 'Reset Password',
             'body' => 'HI! Are your sure to reset your password?',
             'email' => $request->email,
+            'url' => 'http://localhost:5173/changePasswordCustomer/' . $request->email
         ];
 
         try {

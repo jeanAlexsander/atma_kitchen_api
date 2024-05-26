@@ -113,4 +113,28 @@ class UsersController extends Controller
             ]);
         }
     }
+
+    public function changeUser(Request $request, $id)
+    {
+        $data = DB::table('users')->where('user_id', $id)->get();
+
+        if ($data) {
+            DB::table('users')->where('user_id', $id)->update([
+                "first_name" => $request->first_name,
+                "last_name" => $request->last_name,
+                "email" => $request->email,
+            ]);
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Data has been retrieved',
+                'data' => $data
+            ]);
+        } else {
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'Data cannot be retrieved',
+                'data' => $data
+            ]);
+        }
+    }
 }

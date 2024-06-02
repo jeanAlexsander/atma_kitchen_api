@@ -14,6 +14,7 @@ use App\Http\Controllers\api\PurchaseIngredientsController;
 use App\Http\Controllers\api\PurchaseMaterialsController;
 use App\Http\Controllers\api\UsersController;
 use App\Http\Controllers\api\GeneralInformationController;
+use App\Http\Controllers\api\LaporanController;
 
 
 use Illuminate\Http\Request;
@@ -148,3 +149,16 @@ Route::get('/get-mo-confirm', [GeneralInformationController::class, 'orderMOConf
 Route::post('/get-missing-ingredient', [GeneralInformationController::class, 'countMissingIngredient']);
 Route::post('/mo-confirm-order', [GeneralInformationController::class, 'moConfirmOrder']);
 Route::post('/mo-decline-order', [GeneralInformationController::class, 'moRejectOrder']);
+Route::post('/get-customer-pickup', [GeneralInformationController::class, 'getCustomerPickUp']);
+Route::post('/get-invoice', [GeneralInformationController::class, 'getInvoiceData']);
+Route::post('/get-payment-detail', [GeneralInformationController::class, 'getPaymentDetail']);
+Route::post('/get-user-detail', [GeneralInformationController::class, 'getUserDetail']);
+
+//laporan
+Route::get('/get-laporan', [LaporanController::class, 'laporanBulanan']);
+Route::post('/get-product', [LaporanController::class, 'laporanProduct']);
+Route::get('/get-ingredient', [LaporanController::class, 'laporanIngredient']);
+Route::post('/get-ingredient-per-periode', [LaporanController::class, 'laporanIngredientPerPeriodeTertentu']);
+Route::post('/get-gaji', [LaporanController::class, 'read']);
+Route::post('/get-pemasukan-pengeluaran', [LaporanController::class, 'pemasukanDanPengeluaranBulanan']);
+Route::post('/get-rekap-penitip', [LaporanController::class, 'laporanRekapTransaksiPenitip']);

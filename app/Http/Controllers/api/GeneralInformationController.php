@@ -39,6 +39,7 @@ class GeneralInformationController extends Controller
     {
         $data = DB::table('stock_today')
             ->whereDate('date', Carbon::today()->toDateString())
+            ->join('products', 'stock_today.product_id', '=', 'products.product_id')
             ->get();
 
         return response()->json([
@@ -584,4 +585,106 @@ class GeneralInformationController extends Controller
             ], 404);
         }
     }
+
+    public function getCustomerPickUp(Request $request)
+    {
+        $twoDaysAgo = Carbon::now()->subDays(2)->startOfDay();
+        $data = DB::table('orders')
+            ->whereDate('order_date', $twoDaysAgo)
+            ->where('status_order', 'pesanan diproses')
+            ->where('user_id', $request->user_id)
+            ->get();
+        return response()->json([
+            'status' => 'ok',
+            'message' => 'success',
+            'data' => $data
+        ]);
+    }
+    public function getInvoiceData(Request $request)
+    {
+        $data = DB::table('orders')
+            ->where('user_id', $request->user_id)
+            ->where('status_order', 'pesanan diproses')
+            ->get();
+        return response()->json([
+            'status' => 'ok',
+            'message' => 'success',
+            'data' => $data
+        ]);
+    }
+    public function getPaymentDetail(Request $request)
+    {
+
+        $data = DB::table('payments')
+            ->where('order_id', $request->order_id)
+            ->first();
+        $customer = DB::table('users')
+            ->where('user_id', $request->user_id)
+            ->first();
+        $detailOrder = DB::table('order_not_confirm')
+            ->join('products', 'order_not_confirm.product_id', '=', 'products.product_id')
+            ->where('user_id', $request->user_id)
+            ->where('order_date', $request->order_date)
+            ->get();
+        $delivery = DB::table('delivery')->where('order_id', $request->order_id)->first();
+        $order = DB::table('orders')->where('order_id', $request->order_id)->first();
+        return response()->json([
+            'status' => 'ok',
+            'message' => 'success',
+            'data' => [
+                'payment' => $data,
+                'customer' => $customer,
+                'order' => $detailOrder,
+                'delivery' => $delivery,
+                'orderData' => $order
+            ]
+        ]);
+    }
+
+    public function getUserDetail(Request $request)
+    {
+        $data = DB::table('users')->where('user_id', $request->user_id)->first();
+        return response()->json([
+            'status' => 'ok',
+            'message' => 'success',
+            'data' => $data
+        ]);
+    }
+
+    // public function balanceWithdrawas(Request $request)
+    // {
+    //     // Perbarui status pesanan menjadi 'pesanan ditolak' di tabel 'orders'
+    //     DB::table('users')->where('user_id', $request->user_id)->update([
+    //         'status_' => 'pesanan ditolak'
+    //     ]);
+
+    //     // Dapatkan saldo saat ini dari pengguna
+    //     $user = DB::table('users')->where('user_id', $request->user_id)->first();
+
+    //     // Pastikan pengguna ditemukan sebelum melanjutkan
+    //     if ($user) {
+    //         $saldo = $user->saldo;
+
+    //         // Tambahkan jumlah total dari permintaan ke saldo saat ini
+    //         $saldo += $request->total;
+
+    //         // Perbarui saldo pengguna di tabel 'users'
+    //         DB::table('users')->where('user_id', $request->user_id)->update([
+    //             'saldo' => $saldo
+    //         ]);
+
+    //         // Berikan respons sesuai keberhasilan
+    //         return response()->json([
+    //             'status' => 'ok',
+    //             'message' => 'Success',
+    //             'data' => $request->order_id
+    //         ], 200);
+    //     } else {
+    //         // Jika pengguna tidak ditemukan, kirim respons yang sesuai
+    //         return response()->json([
+    //             'status' => 'error',
+    //             'message' => 'User not found'
+    //         ], 404);
+    //     }
+    // }
 }

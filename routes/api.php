@@ -4,6 +4,7 @@ use App\Http\Controllers\api\BahanController;
 use App\Http\Controllers\api\EmployeesController;
 use App\Http\Controllers\api\PresensiController;
 use App\Http\Controllers\api\ChangePasswordController;
+use App\Http\Controllers\api\EmployeeSalaryController;
 use App\Http\Controllers\api\HistoryController;
 
 

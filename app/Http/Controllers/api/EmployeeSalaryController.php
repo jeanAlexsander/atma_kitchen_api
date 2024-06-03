@@ -31,7 +31,6 @@ class EmployeeSalaryController extends Controller
         }
     }
     
-
     $salary = DB::table('salary')
         ->join('employees', 'salary.employee_id', '=', 'employees.employee_id')
         ->select(

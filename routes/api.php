@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\api\BahanController;
 use App\Http\Controllers\api\EmployeesController;
 use App\Http\Controllers\api\PresensiController;
 use App\Http\Controllers\api\ChangePasswordController;
@@ -15,8 +16,7 @@ use App\Http\Controllers\api\PurchaseMaterialsController;
 use App\Http\Controllers\api\UsersController;
 use App\Http\Controllers\api\GeneralInformationController;
 use App\Http\Controllers\api\LaporanController;
-
-
+use App\Http\Controllers\api\TarikSaldoController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -162,3 +162,14 @@ Route::post('/get-ingredient-per-periode', [LaporanController::class, 'laporanIn
 Route::post('/get-gaji', [LaporanController::class, 'read']);
 Route::post('/get-pemasukan-pengeluaran', [LaporanController::class, 'pemasukanDanPengeluaranBulanan']);
 Route::post('/get-rekap-penitip', [LaporanController::class, 'laporanRekapTransaksiPenitip']);
+
+//tarik saldo
+Route::post('/get-saldo', [TarikSaldoController::class, 'tarikSaldo']);
+Route::post('/get-history-saldo', [TarikSaldoController::class, 'getHistorySaldo']);
+Route::post('/get-pengiriman', [TarikSaldoController::class, 'getPesananDikirim']);
+Route::post('/get-detail-pengiriman', [TarikSaldoController::class, 'getDetailPesananDikirim']);
+Route::post('/update-selesai-pengiriman', [TarikSaldoController::class, 'updateSelesaiPesan']);
+
+//cari bahan
+Route::post('/get-bahan', [BahanController::class, 'getBahan']);
+Route::get('/get-todays-proces', [BahanController::class, 'getOrderTodays']);

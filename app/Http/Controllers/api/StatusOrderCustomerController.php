@@ -10,7 +10,7 @@ class StatusOrderCustomerController extends Controller
 {
     public function read()
     {
-        $data = DB::table('orders')->where('status_order', 'sudah dikirim')->get();
+        $data = DB::table('orders')->where('status_order', 'sedang dikirim')->get();
         if ($data) {
             return response()->json([
                 'status' => 'success',

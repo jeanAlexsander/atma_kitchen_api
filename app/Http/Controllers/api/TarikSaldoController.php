@@ -29,7 +29,7 @@ class TarikSaldoController extends Controller
 
     public function getPesananDikirim(Request $request)
     {
-        $data = DB::table('orders')->where('user_id', $request->user_id)->where('status_order', 'sudah dikirim')->get();
+        $data = DB::table('orders')->where('user_id', $request->user_id)->where('status_order', 'sedang dikirim')->get();
         return response()->json([
             'status' => 'success',
             'message' => 'success',

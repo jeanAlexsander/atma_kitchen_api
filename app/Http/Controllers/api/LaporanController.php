@@ -12,18 +12,16 @@ class LaporanController extends Controller
 {
     public function laporanBulanan()
     {
-
         $data = DB::table('orders')
             ->select(
                 DB::raw('YEAR(order_date) as year'),
                 DB::raw('MONTH(order_date) as month'),
                 DB::raw('SUM(total) as total'),
-                DB::raw('COUNT(order_id) as total_order')
+                DB::raw('COUNT( order_id) as total_order')
             )
-            ->groupBy(DB::raw('YEAR(order_date)'), DB::raw('MONTH(order_date)'))
             ->where('status_order', 'pesanan diproses')
+            ->groupBy(DB::raw('YEAR(order_date)'), DB::raw('MONTH(order_date)'))
             ->get();
-
 
         return response()->json([
             'data' => $data

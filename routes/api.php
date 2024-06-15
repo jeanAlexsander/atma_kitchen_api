@@ -17,6 +17,9 @@ use App\Http\Controllers\api\PurchaseMaterialsController;
 use App\Http\Controllers\api\UsersController;
 use App\Http\Controllers\api\GeneralInformationController;
 use App\Http\Controllers\api\LaporanController;
+use App\Http\Controllers\api\LatePaymentController;
+use App\Http\Controllers\api\StatusOrderController;
+use App\Http\Controllers\api\StatusOrderCustomerController;
 use App\Http\Controllers\api\TarikSaldoController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -163,6 +166,7 @@ Route::post('/get-ingredient-per-periode', [LaporanController::class, 'laporanIn
 Route::post('/get-gaji', [LaporanController::class, 'read']);
 Route::post('/get-pemasukan-pengeluaran', [LaporanController::class, 'pemasukanDanPengeluaranBulanan']);
 Route::post('/get-rekap-penitip', [LaporanController::class, 'laporanRekapTransaksiPenitip']);
+Route::post('/get-employee-salary', [EmployeeSalaryController::class, 'read']);
 
 //tarik saldo
 Route::post('/get-saldo', [TarikSaldoController::class, 'tarikSaldo']);
@@ -174,3 +178,15 @@ Route::post('/update-selesai-pengiriman', [TarikSaldoController::class, 'updateS
 //cari bahan
 Route::post('/get-bahan', [BahanController::class, 'getBahan']);
 Route::get('/get-todays-proces', [BahanController::class, 'getOrderTodays']);
+
+//pesanan diproses
+Route::get('/get-status-order', [StatusOrderController::class, 'read']);
+Route::post('/update-status-order/{id}', [StatusOrderController::class, 'update']);
+
+//pesanan selesai
+Route::get('/get-confirmation-receipt', [StatusOrderCustomerController::class, 'read']);
+Route::post('/update-confirmation-receipt/{id}', [StatusOrderCustomerController::class, 'update']);
+
+//late payment
+Route::get('/get-late-payment', [LatePaymentController::class, 'read']);
+Route::post('/update-late-payment/{id}', [LatePaymentController::class, 'update']);

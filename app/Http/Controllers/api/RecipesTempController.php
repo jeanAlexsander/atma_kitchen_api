@@ -9,51 +9,73 @@ use Illuminate\Support\Facades\DB;
 class RecipesTempController extends Controller
 {
     public function create(Request $request)
-{
-    $data = $request->all();
-    $result = DB::table('recipes_temp')->insert(['product_name' => $data['product_name'], 'deskripsi' => $data['deskripsi']]);
+    {
+        $data = $request->all();
+        $result = DB::table('recipes_temp')->insert(['product_name' => $data['product_name'], 'deskripsi' => $data['deskripsi']]);
 
-    if ($result) {
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Data has been added',
-            'data' => $data
-        ]);
-    } else {
-        return response()->json([
-            'status' => 'failed',
-            'message' => 'Data cannot be added',
-            'data' => $data
-        ]);
-    }
-}
-
-
-    public function read() {
-        $data = DB::table('recipes_temp')->get();
-        if($data){
+        if ($result) {
             return response()->json([
                 'status' => 'success',
-                'message' => 'Data has been Retrieved',
+                'message' => 'Data has been added',
                 'data' => $data
             ]);
         } else {
             return response()->json([
                 'status' => 'failed',
-                'message' => 'Data cannot be retrieved',
+                'message' => 'Data cannot be added',
                 'data' => $data
             ]);
         }
-
     }
+
+
+    public function read()
+    {
+        $cleanData = [];
+        $data = DB::table('products')->select('product_id', 'name')->get();
+
+        foreach ($data as $value) {
+            if ($value->product_id != 2 && $value->product_id != 4 && $value->product_id != 6 && $value->product_id != 8 && $value->product_id != 10) {
+                $cleanData[] = [
+                    'product_id' => $value->product_id,
+                    'name' => $value->name,
+                    'deskripsi' => ''
+                ];
+            }
+        }
+
+        foreach ($cleanData as $key => $value) {
+            $deskripsi = DB::table('recipe_ingredients')
+                ->join('ingredients', 'recipe_ingredients.ingredient_id', '=', 'ingredients.ingredient_id')
+                ->where('recipe_ingredients.product_id', $value['product_id']) // Add condition to match product_id
+                ->select('ingredients.name', 'recipe_ingredients.total_use', 'ingredients.unit')
+                ->get();
+
+            $tempDeskripsi = '';
+            foreach ($deskripsi as $desk) {
+                $tempDeskripsi .= $desk->name . ' ' . $desk->total_use . ' ' . $desk->unit . ', ';
+            }
+
+            $tempDeskripsi = rtrim($tempDeskripsi, ', ');
+
+            $cleanData[$key]['deskripsi'] = $tempDeskripsi;
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Data has been retrieved',
+            'data' => $cleanData
+        ]);
+    }
+
 
     public function update(Request $request, $id)
     {
         $data = DB::table('recipes_temp')
             ->where('recipe_id', $id)
             ->update(['deskripsi' => $request->deskripsi]);
-        
-        if($data){
+
+        if ($data) {
             return response()->json([
                 'status' => 'success',
                 'message' => 'Data has been updated',

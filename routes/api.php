@@ -21,6 +21,7 @@ use App\Http\Controllers\api\LatePaymentController;
 use App\Http\Controllers\api\StatusOrderController;
 use App\Http\Controllers\api\StatusOrderCustomerController;
 use App\Http\Controllers\api\TarikSaldoController;
+use App\Http\Controllers\api\RecipesTempController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -48,7 +49,7 @@ Route::put('/update-promoPoint/{id}', [PromoPointController::class, 'update']);
 Route::delete('/delete-promoPoint/{id}', [PromoPointController::class, 'delete']);
 //Product
 Route::post('/add-product', 'App\Http\Controllers\api\ProductsController@create');
-Route::get('/get-product', 'App\Http\Controllers\api\ProductsController@read');
+Route::get('/get-product-data', 'App\Http\Controllers\api\ProductsController@read');
 Route::post('/update-product/{id}', 'App\Http\Controllers\api\ProductsController@update');
 Route::delete('/delete-product/{id}', 'App\Http\Controllers\api\ProductsController@delete');
 Route::post('/search-product/{id}', 'App\Http\Controllers\api\ProductsController@search');
@@ -59,12 +60,18 @@ Route::get('/get-recipes_temp', 'App\Http\Controllers\api\RecipesTempController@
 Route::put('/update-recipes_temp/{id}', 'App\Http\Controllers\api\RecipesTempController@update');
 Route::delete('/delete-recipes_temp/{id}', 'App\Http\Controllers\api\RecipesTempController@delete');
 Route::post('/search-recipes_temp/{id}', 'App\Http\Controllers\api\RecipesTempController@search');
-//RecipeIngredients
+Route::get('/get-ingredients', [RecipesTempController::class, 'getDataIngredients']);
 Route::post('/add-recipeIngredients', 'App\Http\Controllers\api\RecipeIngredientsController@create');
 Route::get('/get-recipeIngredients', 'App\Http\Controllers\api\RecipeIngredientsController@read');
 Route::post('/update-recipeIngredients/{id}', 'App\Http\Controllers\api\RecipeIngredientsController@update');
 Route::delete('/delete-recipeIngredients/{id}', 'App\Http\Controllers\api\RecipeIngredientsController@delete');
 Route::post('/search-recipeIngredients/{id}', 'App\Http\Controllers\api\RecipeIngredientsController@search');
+Route::post('/add-recipes-new', [RecipesTempController::class, 'addDataRecipe']);
+Route::delete('/delete-recipes-new/{id}', [RecipesTempController::class, 'deleteDataRecipe']);
+Route::get('/get-recipes-update/{id}', [RecipesTempController::class, 'getDataRecipesForUpdate']);
+Route::put('/update-recipes-new', [RecipesTempController::class, 'updateRecipesNew']);
+
+
 //Ingredients
 Route::post('/add-ingredients', 'App\Http\Controllers\api\IngredientsController@create');
 Route::get('/get-ingredients', 'App\Http\Controllers\api\IngredientsController@read');
@@ -190,3 +197,7 @@ Route::post('/update-confirmation-receipt/{id}', [StatusOrderCustomerController:
 //late payment
 Route::get('/get-late-payment', [LatePaymentController::class, 'read']);
 Route::post('/update-late-payment/{id}', [LatePaymentController::class, 'update']);
+
+
+//pencatatan bahan baku
+Route::post('/pencatatan-bahan-baku', [BahanController::class, 'pencatatanBahanBaku']);

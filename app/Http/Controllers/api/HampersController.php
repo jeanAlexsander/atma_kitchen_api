@@ -26,6 +26,16 @@ class HampersController extends Controller
             'image' => $data['image'],
             'hampers_status' => $data['hampers_status'],
         ]);
+
+        $product = $data['product'];
+
+        foreach ($product as $item) {
+            DB::table('hampers_products')->insert([
+                'hampers_id' => DB::table('hampers')->max('hampers_id'),
+                'product_id' => $item['product_id'],
+                'quantity' => $item['quantity'],
+            ]);
+        }
         if ($data) {
             return response()->json([
                 'status' => 'success',

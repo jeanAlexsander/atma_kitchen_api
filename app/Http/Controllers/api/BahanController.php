@@ -76,4 +76,37 @@ class BahanController extends Controller
             'data' => $data
         ]);
     }
+
+    public function pencatatanBahanBaku(Request $request){
+        $data = $request->all();
+
+        $init = $data['inputDataUpdate'];
+
+        foreach ($init as $item){
+            $temp = DB::table('ingredients')
+                ->where('ingredient_id', $item['ingredient_id'])
+                ->first()
+                ->total_use_ingredients;
+            
+            $temp += $item['quantity'];
+            DB::table('ingredients')
+                ->where('ingredient_id', $item['ingredient_id'])
+                ->update([
+                    'total_use_ingredients' => $temp
+            ]);
+        }
+
+        foreach ($init as $item){
+            $temp = DB::table('ingredients')
+                ->where('ingredient_id', $item['ingredient_id'])
+                ->first()
+                ->amount;
+            $temp -= $item['quantity'];
+            DB::table('ingredients')
+                ->where('ingredient_id', $item['ingredient_id'])
+                ->update([
+                    'amount' => $temp
+            ]);
+        }
+    }
 }

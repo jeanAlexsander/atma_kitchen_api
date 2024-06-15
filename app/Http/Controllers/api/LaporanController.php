@@ -30,12 +30,10 @@ class LaporanController extends Controller
 
     public function laporanProduct(Request $request)
     {
-        $request->validate([
-            'month' => 'required|integer|between:1,12'
-        ]);
+        $status = ["pesanan diproses", "selesai", "siap di pickup", "sedang dikirim"];
 
         $orderData = DB::table('orders')
-            ->where('status_order', 'pesanan diproses')
+            ->whereBetween('status_order', $status)
             ->get();
         $cleanData = [];
 

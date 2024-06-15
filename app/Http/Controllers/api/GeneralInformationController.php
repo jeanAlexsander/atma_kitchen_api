@@ -370,7 +370,14 @@ class GeneralInformationController extends Controller
 
         $data['image'] =  $this->getImageUrl($data['image']);
 
-
+        if ($data['point'] == 0){
+            DB::table('users')
+                ->where('user_id', $data['user_id'])
+                ->update([
+                    'total_point' => 0
+                ]);
+        }
+        
         DB::table('payments')->insert([
             'order_id' => $data['order_id'],
             'transfer_proof' => $data['image'],

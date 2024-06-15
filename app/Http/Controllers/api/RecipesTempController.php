@@ -8,6 +8,9 @@ use Illuminate\Support\Facades\DB;
 
 class RecipesTempController extends Controller
 {
+
+
+
     public function create(Request $request)
     {
         $data = $request->all();
@@ -26,6 +29,79 @@ class RecipesTempController extends Controller
                 'data' => $data
             ]);
         }
+    }
+
+    public function addDataRecipe(Request $request){
+        $product_name = $request->product_name;
+        $ingredients = $request->ingredients;
+        DB::table('products')->insert([
+            'name' => $product_name,
+            'price'=> 0,
+        ]);
+        $product_id = DB::table('products')->where('name', $product_name)->first()->product_id;
+
+        foreach ($ingredients as $ingredient) {
+            DB::table('recipe_ingredients')->insert([
+                'product_id' => $product_id,
+                'ingredient_id' => $ingredient['ingredient_id'],
+                'total_use' => $ingredient['total_use']
+            ]);
+        }
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Data has been added',
+            'data' => $request->all()
+        ]);
+    }
+
+    public function deleteDataRecipe($id){
+        DB::table('products')->where('product_id', $id)->delete();
+        DB::table('recipe_ingredients')->where('product_id', $id)->delete();
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Data has been deleted',
+            'data' => $id
+        ]);
+    }
+
+    function getDataRecipesForUpdate($id){
+        $data = DB::table('products')->where('product_id', $id)->first();
+        $ingredients = DB::table('recipe_ingredients')
+            ->join('ingredients', 'recipe_ingredients.ingredient_id', '=', 'ingredients.ingredient_id')
+            ->where('recipe_ingredients.product_id', $id)
+            ->select('recipe_ingredients.ingredient_id', 'ingredients.name', 'recipe_ingredients.total_use')
+            ->get();
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Data has been retrieved',
+            'data' => [
+                'product_name' => $data->name,
+                'ingredients' => $ingredients
+            ]
+        ]);
+    }
+
+    public function updateRecipesNew(Request $request){
+        $product_name = $request->product_name;
+        $ingredients = $request->ingredients;
+        $product_id = DB::table('products')->where('name', $product_name)->first()->product_id;
+        DB::table('products')->where('product_id', $product_id)->update([
+            'name' => $product_name,
+            'price'=> 0,
+        ]);
+        DB::table('recipe_ingredients')->where('product_id', $product_id)->delete();
+        foreach ($ingredients as $ingredient) {
+            DB::table('recipe_ingredients')->insert([
+                'product_id' => $product_id,
+                'ingredient_id' => $ingredient['ingredient_id'],
+                'total_use' => $ingredient['total_use']
+            ]);
+        }
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Data has been updated',
+            'data' => $request->all()
+        ]);
     }
 
 
